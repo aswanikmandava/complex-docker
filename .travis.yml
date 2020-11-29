@@ -19,3 +19,15 @@ after_success:
   - docker push amandava85/complex-nginx
   - docker push amandava85/complex-server
   - docker push amandava85/complex-worker
+
+deploy:
+  provider: elasticbeanstalk
+  region: us-east-1
+  app: complex containers
+  env: ComplexContainers-env
+  bucket_name: elasticbeanstalk-us-east-1-665893174892
+  bucket_path: complex-containers
+  on:
+    branch: master
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
