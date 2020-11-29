@@ -1,0 +1,21 @@
+language: generic
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t amandava85/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run -e CI=true amandava85/react-test npm run test
+
+after_success:
+  - docker build -t amandava85/complex-client ./client
+  - docker build -t amandava85/complex-nginx ./nginx
+  - docker build -t amandava85/complex-server ./server
+  - docker build -t amandava85/complex-worker ./worker
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  - docker push amandava85/complex-client
+  - docker push amandava85/complex-nginx
+  - docker push amandava85/complex-server
+  - docker push amandava85/complex-worker
